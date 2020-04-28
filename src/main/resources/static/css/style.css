@@ -58,6 +58,11 @@ Forces image to be 100% width and not max width of 100%
 /* 
 anchors are inline so you need ot make them block to go full width
 */
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+    color:black;
+    background-color:#fcd900;
+    }
+
 .carousel-item a {
   display: block;
   width:100%;
