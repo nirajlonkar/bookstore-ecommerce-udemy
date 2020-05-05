@@ -10,22 +10,22 @@
 
 
 	<div class="container" style="width: 100%">
-		<ul class="nav nav-pills">
+		<ul class="nav nav-tabs">
 			<li class="nav-item"><a class="nav-link active"
-				data-toggle="pill" href="#newAccount">Create new Account</a></li>
-			<li class="nav-item"><a class="nav-link" data-toggle="pill"
+				data-toggle="tab" href="#newAccount">Create new Account</a></li>
+			<li class="nav-item"><a class="nav-link" data-toggle="tab"
 				href="#login">Login</a></li>
-			<li class="nav-item"><a class="nav-link" data-toggle="pill"
+			<li class="nav-item"><a class="nav-link" data-toggle="tab"
 				href="#forgotPassword">Forgot Password?</a></li>
 		</ul>
 
 		<!-- Tab panes -->
 		<div class="tab-content">
-			<div class="tab-pane container active" id="newAccount">
+			<div class="tab-pane fade" id="newAccount">
 				<div class="panel-group">
 					<div class="panel panel-default">
-						<div class="panel-body">
-							<form action="">
+						<div class="panel-body" style="background-color: #ededed;">
+							<form>
 								<div class="form-group">
 									<label for="newUsername">*Usename</label> <input type="text"
 										required="required" id="newUsername" class="form-control"
@@ -33,8 +33,8 @@
 									<p style="color: #828282">Enter you username here</p>
 								</div>
 								<div class="form-group">
-									<label for="newUsername">*Email</label> <input type="text"
-										required="required" id="newEmail" class="form-control"
+									<label for="email">*Email</label> <input type="text"
+										required="required" id="email" class="form-control"
 										name="email" />
 									<p style="color: #828282">Enter you email here</p>
 								</div>
@@ -49,7 +49,7 @@
 				<div class="panel-group">
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<form action="">
+							<form>
 								<div class="form-group">
 									<label for="newUsername">*Usename</label> <input type="text"
 										required="required" id="newUsername" class="form-control"
@@ -57,7 +57,7 @@
 									<p style="color: #828282">Enter you username here</p>
 								</div>
 								<div class="form-group">
-									<label for="newUsername">*Password</label> <input
+									<label for="password">*Password</label> <input
 										type="password" required="required" id="newPassword"
 										class="form-control" name="password" />
 									<p style="color: #828282">Enter password mailed to you</p>
@@ -73,14 +73,15 @@
 				<div class="panel-group">
 					<div class="panel panel-default">
 						<div class="panel-body">
-							<form action="">
+							<form>
 								<div class="form-group">
-									<label for="newUsername">*Email</label> <input type="text"
-										required="required" id="newUsername" class="form-control"
-										name="username" />
-									<p style="color: #828282">Enter your registered email address. You will be sent a new password.</p>
+									<label for="recoverEmail">*Email</label> <input type="text"
+										required="required" id="recoverEmail" class="form-control"
+										name="email" />
+									<p style="color: #828282">Enter your registered email
+										address. You will be sent a new password.</p>
 								</div>
-							
+
 								<button type="submit" class="btn btn-primary">Send</button>
 							</form>
 						</div>
