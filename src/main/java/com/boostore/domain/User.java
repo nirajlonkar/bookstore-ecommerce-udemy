@@ -1,11 +1,22 @@
 package com.boostore.domain;
 
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.*;
 import javax.persistence.GeneratedValue;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import com.boostore.domain.security.Authority;
+import com.boostore.domain.security.UserRole;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 @Entity
-public class User {
+public class User implements UserDetails{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name = "id",nullable = false,updatable = false)
@@ -20,6 +31,11 @@ public class User {
 	@Column(name = "email",nullable = false,updatable = false)
 	private String email;
 	private boolean enabled=true;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonIgnore
+	private Set<UserRole> userRoles = new HashSet<>();
+	
 	public Long getId() {
 		return id;
 	}
@@ -62,12 +78,40 @@ public class User {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	public boolean isEnabled() {
-		return enabled;
-	}
+	
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+	public Set<UserRole> getUserRoles() {
+		return userRoles;
+	}
+	public void setUserRoles(Set<UserRole> userRoles) {
+		this.userRoles = userRoles;
+	}
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		Set<GrantedAuthority> authorities = new HashSet<>();
+		userRoles.forEach(ur -> authorities.add(new Authority(ur.getRole().getName())));
+		return authorities;
+	}
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
 	
+	public boolean isEnabled() {
+		return enabled;
+	}
 	
 }
