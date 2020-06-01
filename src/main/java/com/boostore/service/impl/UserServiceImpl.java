@@ -1,18 +1,27 @@
 package com.boostore.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.boostore.domain.ShoppingCart;
 import com.boostore.domain.User;
+import com.boostore.domain.UserBilling;
+import com.boostore.domain.UserPayment;
+import com.boostore.domain.UserShipping;
 import com.boostore.domain.security.PasswordResetToken;
 import com.boostore.domain.security.UserRole;
 import com.boostore.repository.PasswordResetTokenRepository;
 import com.boostore.repository.RoleRepository;
+import com.boostore.repository.UserPaymentRepository;
 import com.boostore.repository.UserRepository;
+import com.boostore.repository.UserShippingRepository;
 import com.boostore.service.UserService;
 
 @Service
@@ -27,6 +36,12 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private RoleRepository roleRepository;
+	
+	@Autowired
+	private UserPaymentRepository userPaymentRepository;
+	
+	@Autowired
+	private UserShippingRepository userShippingRepository;
 	
 	@Override
 	public PasswordResetToken getPasswordResetToken(final String token) {
@@ -51,6 +66,7 @@ public class UserServiceImpl implements UserService{
 	}
 
 	@Override
+	@Transactional
 	public User createUser(User user, Set<UserRole> userRoles) throws Exception {
 		User localeUser = userRepository.findByUsername(user.getUsername());
 		if(localeUser != null) {
@@ -62,6 +78,14 @@ public class UserServiceImpl implements UserService{
 			}
 			
 			user.getUserRoles().addAll(userRoles);
+			
+			ShoppingCart shoppingCart = new ShoppingCart();
+			shoppingCart.setUser(user);
+			user.setShoppingCart(shoppingCart);
+			
+			user.setUserShippingList(new ArrayList<UserShipping>());
+			user.setUserPaymentList(new ArrayList<UserPayment>());
+			
 			localeUser = userRepository.save(user);
 		}
 		
@@ -72,6 +96,52 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public User save(User user) {
 		return userRepository.save(user);
+	}
+
+	@Override
+	public void updateUserBilling(UserBilling userBilling, UserPayment userPayment, User user) {
+		userPayment.setUser(user);
+		userPayment.setUserBilling(userBilling);
+		userPayment.setDeafaultPayment(true);
+		userBilling.setUserPayment(userPayment);
+		user.getUserPaymentList().add(userPayment);
+		save(user);
+	}
+
+	@Override
+	public void setUserDefaultPayment(Long defaultPaymentId, User user) {
+		List<UserPayment> userPaymentList = (List<UserPayment>) userPaymentRepository.findAll();
+		for(UserPayment userPayment : userPaymentList) {
+			if(userPayment.getId()==defaultPaymentId) {
+				userPayment.setDeafaultPayment(true);
+				userPaymentRepository.save(userPayment);
+			}else {
+				userPayment.setDeafaultPayment(false);
+				userPaymentRepository.save(userPayment);
+			}
+		}
+	}
+
+	@Override
+	public void updateUserShipping(UserShipping userShipping, User user) {
+		userShipping.setUser(user);
+		userShipping.setUserShippingDefault(true);
+		user.getUserShippingList().add(userShipping);
+		save(user);
+	}
+
+	@Override
+	public void setUserDefaultShipping(Long defaultShippingAddressId, User user) {
+		List<UserShipping> userShippingList = (List<UserShipping>) userShippingRepository.findAll();
+		for(UserShipping userShipping : userShippingList) {
+			if(userShipping.getId()==defaultShippingAddressId) {
+				userShipping.setUserShippingDefault(true);
+				userShippingRepository.save(userShipping);
+			}else {
+				userShipping.setUserShippingDefault(false);
+				userShippingRepository.save(userShipping);
+			}
+		}
 	}
 
 	

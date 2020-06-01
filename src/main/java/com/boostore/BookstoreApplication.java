@@ -17,10 +17,9 @@ import com.boostore.utility.SecurityUtility;
 @SpringBootApplication
 public class BookstoreApplication implements CommandLineRunner {
 
-	
 	@Autowired
 	private UserService userService;
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(BookstoreApplication.class, args);
 	}
@@ -38,7 +37,8 @@ public class BookstoreApplication implements CommandLineRunner {
 		role1.setRoleId(1);
 		role1.setName("ROLE_USER");
 		userRoles.add(new UserRole(user1, role1));
-		
 		userService.createUser(user1, userRoles);
+
 	}
+
 }
